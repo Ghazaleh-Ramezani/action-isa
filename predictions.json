@@ -1,0 +1,43 @@
+{
+  "_how": "Written BEFORE any --go run. Keys are '<lang>.<field>', field in {S, S_cf, Htot, ordering_cf}. extra_analysis.py scores each as HIT if |observed - predicted| <= 0.10, the paper's criterion. Every value below is a scored point prediction, including the SmolLM2 magnitudes.",
+  "_written": "2026-09-03 01:31 UTC",
+  "_basis_qwen": "Seeds 1-4 predicted at the paper's documented seed-0 values, copied programmatically from the ladder table in action-isa.tex. The claim under test is that the ladder is task-sample robust.",
+  "_basis_smollm2": "No prior exists for a second family, so these magnitudes are weak point predictions and are expected to be the least accurate entries in this file. The claim we actually care about is the ORDERING L1 > L0' > L0 with L0 at or near the floor at 360M; magnitude MISSes with the ordering intact should be read as the ordering surviving, not as the prediction failing. Stated here so the distinction is on record before the run, not argued after it.",
+  "HuggingFaceTB/SmolLM2-360M-Instruct": {
+    "L0.S": 0.0,
+    "L0p.S": 0.15,
+    "L1.S": 0.6,
+    "L0.ordering_cf": 0.0,
+    "L0p.ordering_cf": 0.0,
+    "L1.ordering_cf": 1.0
+  },
+  "HuggingFaceTB/SmolLM2-1.7B-Instruct": {
+    "L0.S": 0.15,
+    "L0p.S": 0.35,
+    "L1.S": 0.45,
+    "L0.ordering_cf": 0.0,
+    "L1.ordering_cf": 0.5
+  },
+  "Qwen/Qwen3-1.7B": {
+    "L0.S": 0.2,
+    "L0.Htot": 1.043,
+    "L0.ordering_cf": 0.0,
+    "L0p.S": 0.4,
+    "L0p.Htot": 0.967,
+    "L0p.ordering_cf": 0.0,
+    "L1.S": 0.45,
+    "L1.Htot": 2.092,
+    "L1.ordering_cf": 0.5
+  },
+  "Qwen/Qwen3-4B": {
+    "L0.S": 0.275,
+    "L0.Htot": 1.251,
+    "L0.ordering_cf": 0.0,
+    "L0p.S": 0.525,
+    "L0p.Htot": 0.694,
+    "L0p.ordering_cf": 0.33,
+    "L1.S": 0.4,
+    "L1.Htot": 1.481,
+    "L1.ordering_cf": 0.33
+  }
+}

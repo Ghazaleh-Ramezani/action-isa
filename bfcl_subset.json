@@ -1,0 +1,7624 @@
+{
+ "bundles": [
+  {
+   "cls": "GorillaFileSystem",
+   "parts": [
+    "cd",
+    "mv"
+   ],
+   "name": "CD_THEN_MV"
+  },
+  {
+   "cls": "GorillaFileSystem",
+   "parts": [
+    "mv",
+    "cd"
+   ],
+   "name": "MV_THEN_CD"
+  },
+  {
+   "cls": "GorillaFileSystem",
+   "parts": [
+    "cd",
+    "cp"
+   ],
+   "name": "CD_THEN_CP"
+  },
+  {
+   "cls": "GorillaFileSystem",
+   "parts": [
+    "cd",
+    "touch"
+   ],
+   "name": "CD_THEN_TOUCH"
+  },
+  {
+   "cls": "GorillaFileSystem",
+   "parts": [
+    "touch",
+    "echo"
+   ],
+   "name": "TOUCH_THEN_ECHO"
+  },
+  {
+   "cls": "GorillaFileSystem",
+   "parts": [
+    "cp",
+    "cd"
+   ],
+   "name": "CP_THEN_CD"
+  },
+  {
+   "cls": "VehicleControlAPI",
+   "parts": [
+    "pressBrakePedal",
+    "startEngine"
+   ],
+   "name": "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+  }
+ ],
+ "records": [
+  {
+   "id": "multi_turn_base_1",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "alex": {
+       "type": "directory",
+       "contents": {
+        "workspace": {
+         "type": "directory",
+         "contents": {
+          "log.txt": {
+           "type": "file",
+           "content": "This is a log file. No errors found. Another line. Yet another line. Error: Something went wrong. Final line."
+          },
+          "archive": {
+           "type": "directory",
+           "contents": {}
+          },
+          ".hidden_file": {
+           "type": "file",
+           "content": "This is a hidden file."
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I am alex. Check if the current directory is under my name and list all the visible and hidden contents in the current directory now, please."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Go to workspace directory and move one of the 'log.txt' files into a new directory 'archive'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Investigate within 'log.txt' for the occurrence of the keyword 'Error'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Finally, show the last 20 lines the file."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "ls(a=True)",
+    "cd(folder='workspace')",
+    "mv(source='log.txt',destination='archive')",
+    "cd(folder='archive')",
+    "grep(file_name='log.txt',pattern='Error')",
+    "tail(file_name='log.txt',lines=20)"
+   ],
+   "gold_turns": [
+    [
+     "ls(a=True)"
+    ],
+    [
+     "cd(folder='workspace')",
+     "mv(source='log.txt',destination='archive')"
+    ],
+    [
+     "cd(folder='archive')",
+     "grep(file_name='log.txt',pattern='Error')"
+    ],
+    [
+     "tail(file_name='log.txt',lines=20)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "ls(a=True)"
+    },
+    {
+     "bundle": "CD_THEN_MV",
+     "calls": [
+      "cd(folder='workspace')",
+      "mv(source='log.txt',destination='archive')"
+     ]
+    },
+    {
+     "call": "cd(folder='archive')"
+    },
+    {
+     "call": "grep(file_name='log.txt',pattern='Error')"
+    },
+    {
+     "call": "tail(file_name='log.txt',lines=20)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "a": [
+     "True"
+    ],
+    "folder": [
+     "'archive'",
+     "'workspace'"
+    ],
+    "source": [
+     "'log.txt'"
+    ],
+    "destination": [
+     "'archive'"
+    ],
+    "file_name": [
+     "'log.txt'"
+    ],
+    "pattern": [
+     "'Error'"
+    ],
+    "lines": [
+     "20"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_3",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "alex": {
+       "type": "directory",
+       "contents": {
+        "projects": {
+         "type": "directory",
+         "contents": {
+          "photography": {
+           "type": "directory",
+           "contents": {
+            "test_image1.jpg": {
+             "type": "file",
+             "content": "Image data 1"
+            },
+            "test_document.txt": {
+             "type": "file",
+             "content": "Document data"
+            },
+            "backup_tests": {
+             "type": "directory",
+             "contents": {}
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "As part of my latest photography project, I need to gather files that have 'test' in their name from any folder in my current directory. Could you help me locate those?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "After identifying them, the next step is to ensure the images and text files are safely copied into a 'backup_tests' folder right within the same directory. Could that be arranged?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "find(path='.',name='test')",
+    "cd(folder='projects')",
+    "cd(folder='photography')",
+    "cp(source='test_image1.jpg',destination='backup_tests')",
+    "cp(source='test_document.txt',destination='backup_tests')"
+   ],
+   "gold_turns": [
+    [
+     "find(path='.',name='test')"
+    ],
+    [
+     "cd(folder='projects')",
+     "cd(folder='photography')",
+     "cp(source='test_image1.jpg',destination='backup_tests')",
+     "cp(source='test_document.txt',destination='backup_tests')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "find(path='.',name='test')"
+    },
+    {
+     "call": "cd(folder='projects')"
+    },
+    {
+     "bundle": "CD_THEN_CP",
+     "calls": [
+      "cd(folder='photography')",
+      "cp(source='test_image1.jpg',destination='backup_tests')"
+     ]
+    },
+    {
+     "call": "cp(source='test_document.txt',destination='backup_tests')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "path": [
+     "'.'"
+    ],
+    "name": [
+     "'test'"
+    ],
+    "folder": [
+     "'photography'",
+     "'projects'"
+    ],
+    "source": [
+     "'test_document.txt'",
+     "'test_image1.jpg'"
+    ],
+    "destination": [
+     "'backup_tests'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_6",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "gorilla": {
+       "type": "directory",
+       "contents": {
+        "communal": {
+         "type": "directory",
+         "contents": {}
+        },
+        "reserve": {
+         "type": "directory",
+         "contents": {}
+        },
+        "shared": {
+         "type": "directory",
+         "contents": {}
+        },
+        "archives": {
+         "type": "directory",
+         "contents": {}
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "It's getting late here, and I'm wrapping up my notes for the day. Please initiate a file creation in our communal folder, labeling it as 'Annual_Report_2023.docx'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Hi, I want to put some statistics in the annual report. Here are the things I want to put 'Company Earning: 2000 Company Expenditure: 500 Company Name: Gorilla'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "May I have a look at what's inside 'Annual_Report_2023.docx'?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Let's delve into 'Annual_Report_2023.docx'. How many words does it contain?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "To conclude, store the number of words in a new file report_word_count.txt in the existing shared directory."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cd(folder='communal')",
+    "touch(file_name='Annual_Report_2023.docx')",
+    "echo(content='Company Earning: 2000 Company Expenditure: 500 Company Name: Gorilla',file_name='Annual_Report_2023.docx')",
+    "cat(file_name='Annual_Report_2023.docx')",
+    "wc(file_name='Annual_Report_2023.docx',mode='w')",
+    "cd(folder='..')",
+    "cd(folder='shared')",
+    "touch(file_name='report_word_count.txt')",
+    "echo(content='9',file_name='report_word_count.txt')"
+   ],
+   "gold_turns": [
+    [
+     "cd(folder='communal')",
+     "touch(file_name='Annual_Report_2023.docx')"
+    ],
+    [
+     "echo(content='Company Earning: 2000 Company Expenditure: 500 Company Name: Gorilla',file_name='Annual_Report_2023.docx')"
+    ],
+    [
+     "cat(file_name='Annual_Report_2023.docx')"
+    ],
+    [
+     "wc(file_name='Annual_Report_2023.docx',mode='w')"
+    ],
+    [
+     "cd(folder='..')",
+     "cd(folder='shared')",
+     "touch(file_name='report_word_count.txt')",
+     "echo(content='9',file_name='report_word_count.txt')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "bundle": "CD_THEN_TOUCH",
+     "calls": [
+      "cd(folder='communal')",
+      "touch(file_name='Annual_Report_2023.docx')"
+     ]
+    },
+    {
+     "call": "echo(content='Company Earning: 2000 Company Expenditure: 500 Company Name: Gorilla',file_name='Annual_Report_2023.docx')"
+    },
+    {
+     "call": "cat(file_name='Annual_Report_2023.docx')"
+    },
+    {
+     "call": "wc(file_name='Annual_Report_2023.docx',mode='w')"
+    },
+    {
+     "call": "cd(folder='..')"
+    },
+    {
+     "bundle": "CD_THEN_TOUCH",
+     "calls": [
+      "cd(folder='shared')",
+      "touch(file_name='report_word_count.txt')"
+     ]
+    },
+    {
+     "call": "echo(content='9',file_name='report_word_count.txt')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "folder": [
+     "'..'",
+     "'communal'",
+     "'shared'"
+    ],
+    "file_name": [
+     "'Annual_Report_2023.docx'",
+     "'report_word_count.txt'"
+    ],
+    "content": [
+     "'9'",
+     "'Company Earning: 2000 Company Expenditure: 500 Company Name: Gorilla'"
+    ],
+    "mode": [
+     "'w'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_9",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "alex": {
+       "type": "directory",
+       "contents": {
+        "Documentation": {
+         "type": "directory",
+         "contents": {
+          "FinalReport.txt": {
+           "type": "file",
+           "content": "This is the final report for the year 2024. It contains all the necessary details and summaries."
+          },
+          "Archives": {
+           "type": "directory",
+           "contents": {}
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I remember I should have a document called 'FinalReport.txt' in the 'Documentation' folder. "
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Make a copy of 'FinalReport.txt' to the 'Archives' directory inside the 'Documentation' folder, while ensuring the duplicate is preserved as 'ArchivedFinalReport2024.txt'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Methodically arrange and sort the inaugural line of the 'ArchivedFinalReport2024.txt' in a seamless alphabetical order to verify clarity and sequence."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cd(folder='Documentation')",
+    "cp(source='FinalReport.txt',destination='Archives')",
+    "cd(folder='Archives')",
+    "mv(source='FinalReport.txt',destination='ArchivedFinalReport2024.txt')",
+    "sort(file_name='ArchivedFinalReport2024.txt')"
+   ],
+   "gold_turns": [
+    [
+     "cd(folder='Documentation')"
+    ],
+    [
+     "cp(source='FinalReport.txt',destination='Archives')",
+     "cd(folder='Archives')",
+     "mv(source='FinalReport.txt',destination='ArchivedFinalReport2024.txt')"
+    ],
+    [
+     "sort(file_name='ArchivedFinalReport2024.txt')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "bundle": "CD_THEN_CP",
+     "calls": [
+      "cd(folder='Documentation')",
+      "cp(source='FinalReport.txt',destination='Archives')"
+     ]
+    },
+    {
+     "bundle": "CD_THEN_MV",
+     "calls": [
+      "cd(folder='Archives')",
+      "mv(source='FinalReport.txt',destination='ArchivedFinalReport2024.txt')"
+     ]
+    },
+    {
+     "call": "sort(file_name='ArchivedFinalReport2024.txt')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "folder": [
+     "'Archives'",
+     "'Documentation'"
+    ],
+    "source": [
+     "'FinalReport.txt'"
+    ],
+    "destination": [
+     "'ArchivedFinalReport2024.txt'",
+     "'Archives'"
+    ],
+    "file_name": [
+     "'ArchivedFinalReport2024.txt'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_10",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "alex": {
+       "type": "directory",
+       "contents": {
+        "workspace": {
+         "type": "directory",
+         "contents": {
+          "proposal.docx": {
+           "type": "file",
+           "content": "Initial project proposal document content."
+          },
+          "notes.md": {
+           "type": "file",
+           "content": "Meeting highlights and notes."
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Hey, can you set up a new directory named 'Projects' right in workspace folder?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Let's move over the project's proposal document into this 'Projects' folder, but we'll go ahead and rename it to 'final_proposal_2024'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Inside this directory, get cracking on a new file, call it 'notes.md', to capture all the highlights from our meetings."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Also, create a file named 'summary.txt' and write 'Hello' into it. After that, do a quick comparison between this one and 'notes.md' to spot any disparities in information."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Finally, tally up the number of characters in 'summary.txt'."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cd(folder='workspace')",
+    "mkdir(dir_name='Projects')",
+    "mv(source='proposal.docx',destination='Projects')",
+    "cd(folder='Projects')",
+    "mv(source='proposal.docx',destination='final_proposal_2024')",
+    "touch(file_name='notes.md')",
+    "touch(file_name='summary.txt')",
+    "echo(content='Hello',file_name='summary.txt')",
+    "diff(file_name1='notes.md',file_name2='summary.txt')",
+    "wc(file_name='summary.txt',mode='c')"
+   ],
+   "gold_turns": [
+    [
+     "cd(folder='workspace')",
+     "mkdir(dir_name='Projects')"
+    ],
+    [
+     "mv(source='proposal.docx',destination='Projects')",
+     "cd(folder='Projects')",
+     "mv(source='proposal.docx',destination='final_proposal_2024')"
+    ],
+    [
+     "touch(file_name='notes.md')"
+    ],
+    [
+     "touch(file_name='summary.txt')",
+     "echo(content='Hello',file_name='summary.txt')",
+     "diff(file_name1='notes.md',file_name2='summary.txt')"
+    ],
+    [
+     "wc(file_name='summary.txt',mode='c')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "cd(folder='workspace')"
+    },
+    {
+     "call": "mkdir(dir_name='Projects')"
+    },
+    {
+     "bundle": "MV_THEN_CD",
+     "calls": [
+      "mv(source='proposal.docx',destination='Projects')",
+      "cd(folder='Projects')"
+     ]
+    },
+    {
+     "call": "mv(source='proposal.docx',destination='final_proposal_2024')"
+    },
+    {
+     "call": "touch(file_name='notes.md')"
+    },
+    {
+     "bundle": "TOUCH_THEN_ECHO",
+     "calls": [
+      "touch(file_name='summary.txt')",
+      "echo(content='Hello',file_name='summary.txt')"
+     ]
+    },
+    {
+     "call": "diff(file_name1='notes.md',file_name2='summary.txt')"
+    },
+    {
+     "call": "wc(file_name='summary.txt',mode='c')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "folder": [
+     "'Projects'",
+     "'workspace'"
+    ],
+    "dir_name": [
+     "'Projects'"
+    ],
+    "source": [
+     "'proposal.docx'"
+    ],
+    "destination": [
+     "'Projects'",
+     "'final_proposal_2024'"
+    ],
+    "file_name": [
+     "'notes.md'",
+     "'summary.txt'"
+    ],
+    "content": [
+     "'Hello'"
+    ],
+    "file_name1": [
+     "'notes.md'"
+    ],
+    "file_name2": [
+     "'summary.txt'"
+    ],
+    "mode": [
+     "'c'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_12",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "alex": {
+       "type": "directory",
+       "contents": {
+        "Documents": {
+         "type": "directory",
+         "contents": {}
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Pop on over to the 'Documents' directory and craft a new file dubbed 'summary.txt', would you? If it already exists, return an error"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "In 'Documents', let's capture some profound topic 'quantum computing' and jot them down in the 'summary.txt'. The file should only contain 'quantum computing' in its contents."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "It would be great to get a sense of how comprehensive this file has become. Mind tallying up the words in 'summary.txt' for me?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cd(folder='Documents')",
+    "touch(file_name='summary.txt')",
+    "echo(content='quantum computing',file_name='summary.txt')",
+    "wc(file_name='summary.txt',mode='w')"
+   ],
+   "gold_turns": [
+    [
+     "cd(folder='Documents')",
+     "touch(file_name='summary.txt')"
+    ],
+    [
+     "echo(content='quantum computing',file_name='summary.txt')"
+    ],
+    [
+     "wc(file_name='summary.txt',mode='w')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "bundle": "CD_THEN_TOUCH",
+     "calls": [
+      "cd(folder='Documents')",
+      "touch(file_name='summary.txt')"
+     ]
+    },
+    {
+     "call": "echo(content='quantum computing',file_name='summary.txt')"
+    },
+    {
+     "call": "wc(file_name='summary.txt',mode='w')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "CD_THEN_TOUCH"
+   ],
+   "universe": {
+    "folder": [
+     "'Documents'"
+    ],
+    "file_name": [
+     "'summary.txt'"
+    ],
+    "content": [
+     "'quantum computing'"
+    ],
+    "mode": [
+     "'w'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_16",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "alex": {
+       "type": "directory",
+       "contents": {
+        "research": {
+         "type": "directory",
+         "contents": {
+          "research_notes.txt": {
+           "type": "file",
+           "content": "Line 3: Experiment results Line 1: Introduction Line 2: Methodology"
+          },
+          "archives": {
+           "type": "directory",
+           "contents": {}
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "In research directory, there is a file called 'research_notes.txt'. Please make a prioritized backup by moving a copy of it to the folder named 'archives' within research, labeling the new file as '2024_research_backup.txt'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Now, take the contents of '2024_research_backup.txt' that we just created and sort the lines alphabetically."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Once the list is sorted, find out how many lines are in the sorted '2024_research_backup.txt' file."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cd(folder='research')",
+    "cp(source='research_notes.txt',destination='archives')",
+    "cd(folder='archives')",
+    "mv(source='research_notes.txt',destination='2024_research_backup.txt')",
+    "sort(file_name='2024_research_backup.txt')",
+    "wc(file_name='2024_research_backup.txt',mode='l')"
+   ],
+   "gold_turns": [
+    [
+     "cd(folder='research')",
+     "cp(source='research_notes.txt',destination='archives')",
+     "cd(folder='archives')",
+     "mv(source='research_notes.txt',destination='2024_research_backup.txt')"
+    ],
+    [
+     "sort(file_name='2024_research_backup.txt')"
+    ],
+    [
+     "wc(file_name='2024_research_backup.txt',mode='l')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "bundle": "CD_THEN_CP",
+     "calls": [
+      "cd(folder='research')",
+      "cp(source='research_notes.txt',destination='archives')"
+     ]
+    },
+    {
+     "bundle": "CD_THEN_MV",
+     "calls": [
+      "cd(folder='archives')",
+      "mv(source='research_notes.txt',destination='2024_research_backup.txt')"
+     ]
+    },
+    {
+     "call": "sort(file_name='2024_research_backup.txt')"
+    },
+    {
+     "call": "wc(file_name='2024_research_backup.txt',mode='l')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "folder": [
+     "'archives'",
+     "'research'"
+    ],
+    "source": [
+     "'research_notes.txt'"
+    ],
+    "destination": [
+     "'2024_research_backup.txt'",
+     "'archives'"
+    ],
+    "file_name": [
+     "'2024_research_backup.txt'"
+    ],
+    "mode": [
+     "'l'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_25",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "workspace": {
+       "type": "directory",
+       "contents": {
+        "Research2023": {
+         "type": "directory",
+         "contents": {}
+        },
+        "summary.txt": {
+         "type": "file",
+         "content": "This is the summary of the project. It includes various findings and conclusions. Further analysis is required."
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Examine current directory for any presence of the file named 'summary.txt'. If there is one, What's inside?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Copy it into 'Research2023'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Post review, organize the lines in 'summary.txt' alphabetically."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Conclude by calculating the total lines in the sorted 'summary.txt' to verify that everything is meticulously arranged."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cat(file_name='summary.txt')",
+    "cp(source='summary.txt',destination='Research2023')",
+    "cd(folder='Research2023')",
+    "sort(file_name='summary.txt')",
+    "wc(file_name='summary.txt',mode='l')"
+   ],
+   "gold_turns": [
+    [
+     "cat(file_name='summary.txt')"
+    ],
+    [
+     "cp(source='summary.txt',destination='Research2023')"
+    ],
+    [
+     "cd(folder='Research2023')",
+     "sort(file_name='summary.txt')"
+    ],
+    [
+     "wc(file_name='summary.txt',mode='l')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "cat(file_name='summary.txt')"
+    },
+    {
+     "bundle": "CP_THEN_CD",
+     "calls": [
+      "cp(source='summary.txt',destination='Research2023')",
+      "cd(folder='Research2023')"
+     ]
+    },
+    {
+     "call": "sort(file_name='summary.txt')"
+    },
+    {
+     "call": "wc(file_name='summary.txt',mode='l')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "file_name": [
+     "'summary.txt'"
+    ],
+    "source": [
+     "'summary.txt'"
+    ],
+    "destination": [
+     "'Research2023'"
+    ],
+    "folder": [
+     "'Research2023'"
+    ],
+    "mode": [
+     "'l'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_26",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "alex": {
+       "type": "directory",
+       "contents": {
+        "tmp": {
+         "type": "directory",
+         "contents": {
+          "file1.txt": {
+           "type": "file",
+           "content": "This is some important data. Another line of text."
+          },
+          "file2.txt": {
+           "type": "file",
+           "content": "Just some random text. More important data here."
+          },
+          "file3.txt": {
+           "type": "file",
+           "content": "Nothing important here. Yet another line."
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Could you kindly navigate to the temporary directory and list all the files available there right in the terminal for me? I would like to quickly skim through them and all the hidden files."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "What's inside the last file displayed?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Create a docx file with the same name as the previosu file but changing the format, they should also have the same content."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cd(folder='tmp')",
+    "ls(a=True)",
+    "cat(file_name='file3.txt')",
+    "touch(file_name='file3.docx')",
+    "echo(content='Nothing important here. Yet another line.',file_name='file3.docx')"
+   ],
+   "gold_turns": [
+    [
+     "cd(folder='tmp')",
+     "ls(a=True)"
+    ],
+    [
+     "cat(file_name='file3.txt')"
+    ],
+    [
+     "touch(file_name='file3.docx')",
+     "echo(content='Nothing important here. Yet another line.',file_name='file3.docx')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "cd(folder='tmp')"
+    },
+    {
+     "call": "ls(a=True)"
+    },
+    {
+     "call": "cat(file_name='file3.txt')"
+    },
+    {
+     "bundle": "TOUCH_THEN_ECHO",
+     "calls": [
+      "touch(file_name='file3.docx')",
+      "echo(content='Nothing important here. Yet another line.',file_name='file3.docx')"
+     ]
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "TOUCH_THEN_ECHO"
+   ],
+   "universe": {
+    "folder": [
+     "'tmp'"
+    ],
+    "a": [
+     "True"
+    ],
+    "file_name": [
+     "'file3.docx'",
+     "'file3.txt'"
+    ],
+    "content": [
+     "'Nothing important here. Yet another line.'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_29",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "Akab": {
+       "type": "directory",
+       "contents": {
+        "VisionX": {
+         "type": "directory",
+         "contents": {
+          "config_main.txt": {
+           "type": "file",
+           "content": "This is the main configuration file. Note: deprecated features are listed here."
+          }
+         }
+        },
+        "Archives": {
+         "type": "directory",
+         "contents": {}
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Open up 'VisionX' folder. What's the human readible disk usage of that folder?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Create a file name based on the number of byte used. It should be in 'number.pdf' format."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Finally, in that file, Write my last question in it."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cd(folder='VisionX')",
+    "du(human_readable=True)",
+    "touch(file_name='79.pdf')",
+    "echo(content='Create a file name based on the number of byte used. It should be in \\'number.pdf\\' format.',file_name='79.pdf')"
+   ],
+   "gold_turns": [
+    [
+     "cd(folder='VisionX')",
+     "du(human_readable=True)"
+    ],
+    [
+     "touch(file_name='79.pdf')"
+    ],
+    [
+     "echo(content='Create a file name based on the number of byte used. It should be in \\'number.pdf\\' format.',file_name='79.pdf')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "cd(folder='VisionX')"
+    },
+    {
+     "call": "du(human_readable=True)"
+    },
+    {
+     "bundle": "TOUCH_THEN_ECHO",
+     "calls": [
+      "touch(file_name='79.pdf')",
+      "echo(content='Create a file name based on the number of byte used. It should be in \\'number.pdf\\' format.',file_name='79.pdf')"
+     ]
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "folder": [
+     "'VisionX'"
+    ],
+    "human_readable": [
+     "True"
+    ],
+    "file_name": [
+     "'79.pdf'"
+    ],
+    "content": [
+     "\"Create a file name based on the number of byte used. It should be in 'number.pdf' format.\""
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_37",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "temp": {
+       "type": "directory",
+       "contents": {
+        "dev_summary.txt": {
+         "type": "file",
+         "content": "This is a summary of the development process. No server error occurred during the initial phase. However, a server error was detected in the final testing phase. The team is working on resolving the server error. The server error is expected to be fixed by next week. Additional testing will be conducted to ensure no further server errors. The project is on track for completion. The final report will be submitted by the end of the month. The server error has been a major focus. The team is confident in resolving the server error soon."
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Could you go to temp directory, and for each file in there, count the number of lines."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Now, scour through the mysterious 'dev_summary.txt' and hunt for any mentions or whispers of 'server error'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Make a new file whose name is the number of line but in txt format and append the second sentence containing 'server error' to it."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "wc(file_name='dev_summary.txt',mode='l')",
+    "grep(file_name='dev_summary.txt',pattern='server error')",
+    "touch(file_name='1.txt')",
+    "echo(content='However, a server error was detected in the final testing phase.',file_name='1.txt')"
+   ],
+   "gold_turns": [
+    [
+     "wc(file_name='dev_summary.txt',mode='l')"
+    ],
+    [
+     "grep(file_name='dev_summary.txt',pattern='server error')"
+    ],
+    [
+     "touch(file_name='1.txt')",
+     "echo(content='However, a server error was detected in the final testing phase.',file_name='1.txt')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "wc(file_name='dev_summary.txt',mode='l')"
+    },
+    {
+     "call": "grep(file_name='dev_summary.txt',pattern='server error')"
+    },
+    {
+     "bundle": "TOUCH_THEN_ECHO",
+     "calls": [
+      "touch(file_name='1.txt')",
+      "echo(content='However, a server error was detected in the final testing phase.',file_name='1.txt')"
+     ]
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "TOUCH_THEN_ECHO"
+   ],
+   "universe": {
+    "file_name": [
+     "'1.txt'",
+     "'dev_summary.txt'"
+    ],
+    "mode": [
+     "'l'"
+    ],
+    "pattern": [
+     "'server error'"
+    ],
+    "content": [
+     "'However, a server error was detected in the final testing phase.'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_38",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "researcher": {
+       "type": "directory",
+       "contents": {
+        "SuperResearch": {
+         "type": "directory",
+         "contents": {
+          "findings_report": {
+           "type": "file",
+           "content": "This document contains a breakthrough in our research. Further analysis is required to understand the full implications of this breakthrough."
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I've misplaced a vital document inclusive of extensive research. Assist in locating a file named 'findings_report' within this 'SuperResearch'. Could you remove it and the directory."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "What's left in the current directory including the hidden files?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "cd(folder='SuperResearch')",
+    "rm(file_name='findings_report')",
+    "cd(folder='..')",
+    "rmdir(dir_name='SuperResearch')",
+    "ls(a=True)"
+   ],
+   "gold_turns": [
+    [
+     "cd(folder='SuperResearch')",
+     "rm(file_name='findings_report')",
+     "cd(folder='..')",
+     "rmdir(dir_name='SuperResearch')"
+    ],
+    [
+     "ls(a=True)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "cd(folder='SuperResearch')"
+    },
+    {
+     "call": "rm(file_name='findings_report')"
+    },
+    {
+     "call": "cd(folder='..')"
+    },
+    {
+     "call": "rmdir(dir_name='SuperResearch')"
+    },
+    {
+     "call": "ls(a=True)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "folder": [
+     "'..'",
+     "'SuperResearch'"
+    ],
+    "file_name": [
+     "'findings_report'"
+    ],
+    "dir_name": [
+     "'SuperResearch'"
+    ],
+    "a": [
+     "True"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_39",
+   "cls": "GorillaFileSystem",
+   "initial_config": {
+    "GorillaFileSystem": {
+     "root": {
+      "current_working_directory": {
+       "type": "directory",
+       "contents": {}
+      }
+     }
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I need you to set up a fresh folder named 'WebDevProjects' wherever you're currently working."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Enter the folder and populate the 'WebDevProjects' folder with 3 files:, 'styles.css',  'index.html', and 'script.js' with content 'Hello World!','Hi World!', 'Halo World!' in each."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "What's the second file name by system order? Don't list out hidden files."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Can you display the content of the first file by system order?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "mkdir(dir_name='WebDevProjects')",
+    "cd(folder='WebDevProjects')",
+    "touch(file_name='styles.css')",
+    "echo(content='Hello World!', file_name='styles.css')",
+    "touch(file_name='index.html')",
+    "echo(content='Hi World!', file_name='index.html')",
+    "touch(file_name='script.js')",
+    "echo(content='Halo World!', file_name='script.js')",
+    "ls()",
+    "cat(file_name='styles.css')"
+   ],
+   "gold_turns": [
+    [
+     "mkdir(dir_name='WebDevProjects')"
+    ],
+    [
+     "cd(folder='WebDevProjects')",
+     "touch(file_name='styles.css')",
+     "echo(content='Hello World!', file_name='styles.css')",
+     "touch(file_name='index.html')",
+     "echo(content='Hi World!', file_name='index.html')",
+     "touch(file_name='script.js')",
+     "echo(content='Halo World!', file_name='script.js')"
+    ],
+    [
+     "ls()"
+    ],
+    [
+     "cat(file_name='styles.css')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "mkdir(dir_name='WebDevProjects')"
+    },
+    {
+     "bundle": "CD_THEN_TOUCH",
+     "calls": [
+      "cd(folder='WebDevProjects')",
+      "touch(file_name='styles.css')"
+     ]
+    },
+    {
+     "call": "echo(content='Hello World!', file_name='styles.css')"
+    },
+    {
+     "bundle": "TOUCH_THEN_ECHO",
+     "calls": [
+      "touch(file_name='index.html')",
+      "echo(content='Hi World!', file_name='index.html')"
+     ]
+    },
+    {
+     "bundle": "TOUCH_THEN_ECHO",
+     "calls": [
+      "touch(file_name='script.js')",
+      "echo(content='Halo World!', file_name='script.js')"
+     ]
+    },
+    {
+     "call": "ls()"
+    },
+    {
+     "call": "cat(file_name='styles.css')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "dir_name": [
+     "'WebDevProjects'"
+    ],
+    "folder": [
+     "'WebDevProjects'"
+    ],
+    "file_name": [
+     "'index.html'",
+     "'script.js'",
+     "'styles.css'"
+    ],
+    "content": [
+     "'Halo World!'",
+     "'Hello World!'",
+     "'Hi World!'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_50",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 10.5,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "locked",
+      "passenger": "locked",
+      "rear_left": "locked",
+      "rear_right": "locked"
+     },
+     "acTemperature": 22.0,
+     "fanSpeed": 70,
+     "acMode": "auto",
+     "humidityLevel": 45.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 30.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Hey there, I noticed that all of my car doors seem to have locked themselves up, and with my schedule being pretty tight today, I'm in quite a pinch. I could really use your help to get those doors unlocked. It'd be fantastic if you could also switch on the headlights. It's getting a bit darker out here than expected, and visibility's not great!"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "lockDoors(unlock=True, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "setHeadlights(mode='on')"
+   ],
+   "gold_turns": [
+    [
+     "lockDoors(unlock=True, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "setHeadlights(mode='on')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "lockDoors(unlock=True, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "call": "setHeadlights(mode='on')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "unlock": [
+     "True"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "mode": [
+     "'on'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_56",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 10.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "Rivermist",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I'm setting off on a road trip and my departure point is sunny San Francisco. Could you determine the distance to Rivermist to help me plan my fuel stops on the way?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Before embarking on this journey, please top up my vehicle to end with 50 gallons of fuel."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Please start the engine to prepare for our travel. Ensure that the car is locked and everything is secure for a seamless start."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_zipcode_based_on_city('San Francisco')",
+    "get_zipcode_based_on_city('Rivermist')",
+    "estimate_distance(cityA='94016', cityB='83214')",
+    "displayCarStatus('fuel')",
+    "fillFuelTank(fuelAmount=40)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')"
+   ],
+   "gold_turns": [
+    [
+     "get_zipcode_based_on_city('San Francisco')",
+     "get_zipcode_based_on_city('Rivermist')",
+     "estimate_distance(cityA='94016', cityB='83214')"
+    ],
+    [
+     "displayCarStatus('fuel')",
+     "fillFuelTank(fuelAmount=40)"
+    ],
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_zipcode_based_on_city('San Francisco')"
+    },
+    {
+     "call": "get_zipcode_based_on_city('Rivermist')"
+    },
+    {
+     "call": "estimate_distance(cityA='94016', cityB='83214')"
+    },
+    {
+     "call": "displayCarStatus('fuel')"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=40)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "_0": [
+     "'Rivermist'",
+     "'San Francisco'",
+     "'fuel'"
+    ],
+    "cityA": [
+     "'94016'"
+    ],
+    "cityB": [
+     "'83214'"
+    ],
+    "fuelAmount": [
+     "40"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_64",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 15.5,
+     "batteryVoltage": 12.8,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 22.0,
+     "fanSpeed": 60,
+     "acMode": "auto",
+     "humidityLevel": 45.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 100.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 35.0,
+     "frontRightTirePressure": 34.0,
+     "rearLeftTirePressure": 33.0,
+     "rearRightTirePressure": 32.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Before attempting to start the engine, kindly verify that every car door is meticulously secured\u2014acknowledge once confirmed. Should everything be aligned, proceed with activating the START mode."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Please assess my tire pressures within the context of the car's current status. If any tire registers under 40 PSI, which might imply it's below the safe threshold, promptly guide me to the closest tire service facility."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "check_tire_pressure()",
+    "find_nearest_tire_shop()"
+   ],
+   "gold_turns": [
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "check_tire_pressure()",
+     "find_nearest_tire_shop()"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "find_nearest_tire_shop()"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_66",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 10.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Alright, I've been thinking about a road trip and I want to use my own car for the journey. That's quite a stretch\u2014450 miles in one go today. Is this something I could realistically pull off? I just want to know a answer; you don't need to refill if it's not reachable. If it is reachable, set navigation to '1914 7th St, Apt B, Berkeley, CA 94710'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Given that the trip isn't looking too likely with what I have at the moment, I'll need to refuel. I think 40 gallons in total in my tank should do the trick to get me enough mileage. Can you handle the gas top-up for me?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Everything's all set now, and I'm ready to get going. Could you get the engine started for me? Make sure you do it in START mode, with all doors securely locked and the brake properly engaged."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'm planning on visiting this gorgeous little spot in Berkeley, California. Would you be so kind as to set up the navigation system to take me to 2107 Channing Way, Berkeley, CA?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "estimate_drive_feasibility_by_mileage(distance=450.0)",
+    "fillFuelTank(fuelAmount=30)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "set_navigation(destination='2107 Channing Way, Berkeley, CA')"
+   ],
+   "gold_turns": [
+    [
+     "estimate_drive_feasibility_by_mileage(distance=450.0)"
+    ],
+    [
+     "fillFuelTank(fuelAmount=30)"
+    ],
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "set_navigation(destination='2107 Channing Way, Berkeley, CA')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "estimate_drive_feasibility_by_mileage(distance=450.0)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=30)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "set_navigation(destination='2107 Channing Way, Berkeley, CA')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "distance": [
+     "450.0"
+    ],
+    "fuelAmount": [
+     "30"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "destination": [
+     "'2107 Channing Way, Berkeley, CA'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_70",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 10.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Ensure the fuel tank is replenished adequately by adding 38 liters of gasoline so that we're well-prepared for the lengthy voyage ahead. Only fill with interger amount for volumn; round when not integer. Once fueled, proceed to start the engine confidently with the ignition mode, and make certain that all doors are secure, and the parking brake is engaged as a safety measure."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "As we gear up for our adventure, it\u2019s wise to confirm that each tire is inflated to a stable 32 PSI. Should any of the tires fall short, chart a course to the nearest tire service center to have this rectified."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "liter_to_gallon(liter=38)",
+    "fillFuelTank(fuelAmount=10)",
+    "activateParkingBrake(mode='engage')",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "check_tire_pressure()",
+    "find_nearest_tire_shop()",
+    "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+   ],
+   "gold_turns": [
+    [
+     "liter_to_gallon(liter=38)",
+     "fillFuelTank(fuelAmount=10)",
+     "activateParkingBrake(mode='engage')",
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "check_tire_pressure()",
+     "find_nearest_tire_shop()",
+     "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "liter_to_gallon(liter=38)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=10)"
+    },
+    {
+     "call": "activateParkingBrake(mode='engage')"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "find_nearest_tire_shop()"
+    },
+    {
+     "call": "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "liter": [
+     "38"
+    ],
+    "fuelAmount": [
+     "10"
+    ],
+    "mode": [
+     "'engage'"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "destination": [
+     "'456 Oakwood Avenue, Rivermist, 83214'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_71",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 5.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 22.0,
+     "fanSpeed": 60,
+     "acMode": "auto",
+     "humidityLevel": 45.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "engaged",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 100.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Using my vehicle's system, estimate the distance between Rivermist and Stonebrook."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Assess if my vehicle's current mileage will suffice for the distance calculated. You don't need to re-fill, I just want to know."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Fill the fuel tank to completely full."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "With the vehicle secured, start the engine for our prepared journey."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Set navigation directly to Crescent Hollow, Spring, TX for a smooth ride without detours."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_zipcode_based_on_city('Rivermist')",
+    "get_zipcode_based_on_city('Stonebrook')",
+    "estimate_distance(cityA='83214', cityB='74532')",
+    "estimate_drive_feasibility_by_mileage(distance=750.0)",
+    "fillFuelTank(fuelAmount=45.0)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "set_navigation(destination='Crescent Hollow, Spring, TX')"
+   ],
+   "gold_turns": [
+    [
+     "get_zipcode_based_on_city('Rivermist')",
+     "get_zipcode_based_on_city('Stonebrook')",
+     "estimate_distance(cityA='83214', cityB='74532')"
+    ],
+    [
+     "estimate_drive_feasibility_by_mileage(distance=750.0)"
+    ],
+    [
+     "fillFuelTank(fuelAmount=45.0)"
+    ],
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "set_navigation(destination='Crescent Hollow, Spring, TX')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_zipcode_based_on_city('Rivermist')"
+    },
+    {
+     "call": "get_zipcode_based_on_city('Stonebrook')"
+    },
+    {
+     "call": "estimate_distance(cityA='83214', cityB='74532')"
+    },
+    {
+     "call": "estimate_drive_feasibility_by_mileage(distance=750.0)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=45.0)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "set_navigation(destination='Crescent Hollow, Spring, TX')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "_0": [
+     "'Rivermist'",
+     "'Stonebrook'"
+    ],
+    "cityA": [
+     "'83214'"
+    ],
+    "cityB": [
+     "'74532'"
+    ],
+    "distance": [
+     "750.0"
+    ],
+    "fuelAmount": [
+     "45.0"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "destination": [
+     "'Crescent Hollow, Spring, TX'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_73",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 5.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I've noticed my car is nearing empty, and I could really use some extra fuel in the tank. I'm gearing up for a long drive, and I need to make sure I'm set with a full tank before hitting the road."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "While I'm at it, let's make sure the car's ready for the adventure. Start up the engine for me, and confirm everything is good to go, like the doors being locked and the handbrake engaged."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Finally, I'm plotting a trip through San Francisco, specifically aiming for 123 Pine St, San Francisco, CA 94016. Set the GPS for a seamless ride to that location. Anticipating a smooth drive ahead!"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "fillFuelTank(fuelAmount=45.0)",
+    "activateParkingBrake(mode='engage')",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "set_navigation(destination='123 Pine St, San Francisco, CA 94016')"
+   ],
+   "gold_turns": [
+    [
+     "fillFuelTank(fuelAmount=45.0)"
+    ],
+    [
+     "activateParkingBrake(mode='engage')",
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "set_navigation(destination='123 Pine St, San Francisco, CA 94016')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "fillFuelTank(fuelAmount=45.0)"
+    },
+    {
+     "call": "activateParkingBrake(mode='engage')"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "set_navigation(destination='123 Pine St, San Francisco, CA 94016')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "fuelAmount": [
+     "45.0"
+    ],
+    "mode": [
+     "'engage'"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "destination": [
+     "'123 Pine St, San Francisco, CA 94016'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_79",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 15.5,
+     "batteryVoltage": 12.8,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "locked",
+      "passenger": "locked",
+      "rear_left": "locked",
+      "rear_right": "locked"
+     },
+     "acTemperature": 22.0,
+     "fanSpeed": 60,
+     "acMode": "auto",
+     "humidityLevel": 45.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 100.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I just returned to my vehicle, and it dawned on me that I may not have unlocked the doors yet. Would you assist in unlocking them all?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "With every door now open, please proceed to fire up the engine; I need to ensure everything's in working order before hitting the road."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Fantastic! With the engine humming nicely, it\u2019s time for my adventure. Could you adjust the cruise control to 65 mph and make sure we're keeping a prudent distance (100 meters) from the car in front?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "lockDoors(unlock=True, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "setCruiseControl(speed=65, activate=True, distanceToNextVehicle=100)"
+   ],
+   "gold_turns": [
+    [
+     "lockDoors(unlock=True, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    ],
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "setCruiseControl(speed=65, activate=True, distanceToNextVehicle=100)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "lockDoors(unlock=True, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "setCruiseControl(speed=65, activate=True, distanceToNextVehicle=100)"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "unlock": [
+     "False",
+     "True"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "speed": [
+     "65"
+    ],
+    "activate": [
+     "True"
+    ],
+    "distanceToNextVehicle": [
+     "100"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_82",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 15.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 30.0,
+     "frontRightTirePressure": 30.0,
+     "rearLeftTirePressure": 28.0,
+     "rearRightTirePressure": 28.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "My tires need to be in top-notch condition before embarking on my journey. Could you ensure they have optimum pressure? If any tire falls short of 30.0 psi, it\u2019s off to the nearest service station to remedy it pronto. Let\u2019s also ready the car for navigation if the shop isn't miles away!"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Before setting off on our eagerly-awaited road escapade, it would be prudent to fuel up the car entirely. Once it's brimming with gas, I\u2019d appreciate it if you could translate its capacity from gallons to liters for me. Share the details when it's sorted."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "With a tank full of fuel and all safety measures addressed, I'd love to ignite the car in pure anticipation."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "check_tire_pressure()",
+    "find_nearest_tire_shop()",
+    "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')",
+    "fillFuelTank(fuelAmount=35.0)",
+    "gallon_to_liter(gallon=50.0)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')"
+   ],
+   "gold_turns": [
+    [
+     "check_tire_pressure()",
+     "find_nearest_tire_shop()",
+     "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    ],
+    [
+     "fillFuelTank(fuelAmount=35.0)",
+     "gallon_to_liter(gallon=50.0)"
+    ],
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "find_nearest_tire_shop()"
+    },
+    {
+     "call": "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=35.0)"
+    },
+    {
+     "call": "gallon_to_liter(gallon=50.0)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "destination": [
+     "'456 Oakwood Avenue, Rivermist, 83214'"
+    ],
+    "fuelAmount": [
+     "35.0"
+    ],
+    "gallon": [
+     "50.0"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_83",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 0.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I am at the gas station and ready to fill up my car with gasoline. I would appreciate it if you could manage filling 30 liters into my vehicle to ensure it's properly fueled for the journey ahead. Use 2 decimal digit of the gallon amount"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "With the fuel tank now filled with some gas, let's proceed to start the car engine. I'd be grateful if you could initiate the engine in 'START' mode for me."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "After starting the engine, there was a slight vibration while I was driving. Would you mind checking the tire pressure to confirm everything's in good working order?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "liter_to_gallon(liter=30)",
+    "fillFuelTank(fuelAmount=7.93)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "check_tire_pressure()"
+   ],
+   "gold_turns": [
+    [
+     "liter_to_gallon(liter=30)",
+     "fillFuelTank(fuelAmount=7.93)"
+    ],
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "check_tire_pressure()"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "liter_to_gallon(liter=30)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=7.93)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "check_tire_pressure()"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "liter": [
+     "30"
+    ],
+    "fuelAmount": [
+     "7.93"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_84",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 5.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 28.0,
+     "frontRightTirePressure": 28.0,
+     "rearLeftTirePressure": 28.0,
+     "rearRightTirePressure": 28.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "My vehicle's fuel tank is low; please refuel it with 30 gallons. Following that, initiate the engine using ignition mode 'START', ensuring all doors are secured and the parking brake is set to avoid errors."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Post-engine start, verify tire pressure. If it's insufficient (less than 30.0 psi), proceed to the nearest tire shop at 456 Oakwood Avenue, Rivermist, 83214."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "fillFuelTank(fuelAmount=30)",
+    "activateParkingBrake(mode='engage')",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "check_tire_pressure()",
+    "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+   ],
+   "gold_turns": [
+    [
+     "fillFuelTank(fuelAmount=30)",
+     "activateParkingBrake(mode='engage')",
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "check_tire_pressure()",
+     "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "fillFuelTank(fuelAmount=30)"
+    },
+    {
+     "call": "activateParkingBrake(mode='engage')"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "fuelAmount": [
+     "30"
+    ],
+    "mode": [
+     "'engage'"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "destination": [
+     "'456 Oakwood Avenue, Rivermist, 83214'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_85",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 10.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 22.0,
+     "fanSpeed": 70,
+     "acMode": "auto",
+     "humidityLevel": 45.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 100.0,
+     "cruiseStatus": "inactive",
+     "destination": "San Francisco",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I\u2019m planning a trip from Rivermist to San Francisco, and I need to see if my current fuel situation will get me there. Could you work out the distance?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Make sure the tank's filled up for the ride. Oh, and kick things off in 'START' mode."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_zipcode_based_on_city('San Francisco')",
+    "get_zipcode_based_on_city('Rivermist')",
+    "estimate_distance(cityA='83214', cityB='94016')",
+    "estimate_drive_feasibility_by_mileage(distance=980.0)",
+    "fillFuelTank(fuelAmount=40.0)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')"
+   ],
+   "gold_turns": [
+    [
+     "get_zipcode_based_on_city('San Francisco')",
+     "get_zipcode_based_on_city('Rivermist')",
+     "estimate_distance(cityA='83214', cityB='94016')",
+     "estimate_drive_feasibility_by_mileage(distance=980.0)"
+    ],
+    [
+     "fillFuelTank(fuelAmount=40.0)",
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_zipcode_based_on_city('San Francisco')"
+    },
+    {
+     "call": "get_zipcode_based_on_city('Rivermist')"
+    },
+    {
+     "call": "estimate_distance(cityA='83214', cityB='94016')"
+    },
+    {
+     "call": "estimate_drive_feasibility_by_mileage(distance=980.0)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=40.0)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "_0": [
+     "'Rivermist'",
+     "'San Francisco'"
+    ],
+    "cityA": [
+     "'83214'"
+    ],
+    "cityB": [
+     "'94016'"
+    ],
+    "distance": [
+     "980.0"
+    ],
+    "fuelAmount": [
+     "40.0"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_87",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 30.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "As I gear up for another delightful journey exploring the captivating waterways, I'm looking to convert 60 gallons of fuel into liters. Could you assist me with that conversion? I tend to work more comfortably with liters."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Thank goodness! With the conversion sorted, I'd appreciate your help in ensuring that my vehicle's tank is topped up with 20 gallons of gasoline."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Now, with the tank filled to my liking, I need to make sure my ride is prepared for this adventure. Could you help me start the engine, lock the doors, and engage the parking brake for a safe start?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Before setting off on this little expedition, can you do a quick tire pressure check for me? If any of the pressures fall below 33, kindly point me towards the nearest tire shop to get everything in tip-top shape before we roll."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "gallon_to_liter(gallon=60.0)",
+    "fillFuelTank(fuelAmount=20.0)",
+    "activateParkingBrake(mode='engage')",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "check_tire_pressure()",
+    "find_nearest_tire_shop()"
+   ],
+   "gold_turns": [
+    [
+     "gallon_to_liter(gallon=60.0)"
+    ],
+    [
+     "fillFuelTank(fuelAmount=20.0)"
+    ],
+    [
+     "activateParkingBrake(mode='engage')",
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "check_tire_pressure()",
+     "find_nearest_tire_shop()"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "gallon_to_liter(gallon=60.0)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=20.0)"
+    },
+    {
+     "call": "activateParkingBrake(mode='engage')"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "find_nearest_tire_shop()"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "gallon": [
+     "60.0"
+    ],
+    "fuelAmount": [
+     "20.0"
+    ],
+    "mode": [
+     "'engage'"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_89",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 10.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "Stonebrook",
+     "frontLeftTirePressure": 32.0,
+     "frontRightTirePressure": 32.0,
+     "rearLeftTirePressure": 30.0,
+     "rearRightTirePressure": 30.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I'm planning a road trip from Rivermist to Stonebrook and would love an estimate on how far this journey will take me."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Great, now that I know the distance, please check if my current fuel level can handle the journey or if I need a refill."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Ah, it looks like I might need some fuel. Could you go ahead and fill up the tank with 30 gallons of fuel so that I end with 40 gallons?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Let's get the vehicle ready by starting the engine, please make sure everything's in place."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_zipcode_based_on_city(city='Rivermist')",
+    "get_zipcode_based_on_city(city='Stonebrook')",
+    "estimate_distance(cityA='83214', cityB='74532')",
+    "estimate_drive_feasibility_by_mileage(distance=750.0)",
+    "fillFuelTank(fuelAmount=30.0)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')"
+   ],
+   "gold_turns": [
+    [
+     "get_zipcode_based_on_city(city='Rivermist')",
+     "get_zipcode_based_on_city(city='Stonebrook')",
+     "estimate_distance(cityA='83214', cityB='74532')"
+    ],
+    [
+     "estimate_drive_feasibility_by_mileage(distance=750.0)"
+    ],
+    [
+     "fillFuelTank(fuelAmount=30.0)"
+    ],
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_zipcode_based_on_city(city='Rivermist')"
+    },
+    {
+     "call": "get_zipcode_based_on_city(city='Stonebrook')"
+    },
+    {
+     "call": "estimate_distance(cityA='83214', cityB='74532')"
+    },
+    {
+     "call": "estimate_drive_feasibility_by_mileage(distance=750.0)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=30.0)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "city": [
+     "'Rivermist'",
+     "'Stonebrook'"
+    ],
+    "cityA": [
+     "'83214'"
+    ],
+    "cityB": [
+     "'74532'"
+    ],
+    "distance": [
+     "750.0"
+    ],
+    "fuelAmount": [
+     "30.0"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_92",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 10.5,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 22.0,
+     "fanSpeed": 60,
+     "acMode": "auto",
+     "humidityLevel": 45.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 100.0,
+     "cruiseStatus": "inactive",
+     "destination": "Greenway",
+     "frontLeftTirePressure": 35.0,
+     "frontRightTirePressure": 35.0,
+     "rearLeftTirePressure": 32.0,
+     "rearRightTirePressure": 32.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Could you provide me with a rough distance from Rivermist (zip 83214) to Greenway (zip 74532)? I'm eager to plan a visit and need to know the travel distance."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "In light of this trip, I'm concerned about whether my vehicle's fuel level and car mileage are adequate for the journey. Could you evaluate this for me?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Given this apprehension, can you fill up the fuel completely?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Before I set off, I want to check if the engine will indeed start and ensure that everything is prepped for a safe departure. Could you initiate the engine to confirm this?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Lastly, I must verify that my vehicle is in excellent shape. If any tire pressure is under 35 PSI, could you direct me to the closest tire shop to rectify this promptly?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "estimate_distance(cityA='83214', cityB='74532')",
+    "estimate_drive_feasibility_by_mileage(distance=750.0)",
+    "fillFuelTank(fuelAmount=39.5)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "check_tire_pressure()",
+    "find_nearest_tire_shop()",
+    "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+   ],
+   "gold_turns": [
+    [
+     "estimate_distance(cityA='83214', cityB='74532')"
+    ],
+    [
+     "estimate_drive_feasibility_by_mileage(distance=750.0)"
+    ],
+    [
+     "fillFuelTank(fuelAmount=39.5)"
+    ],
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "check_tire_pressure()",
+     "find_nearest_tire_shop()",
+     "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "estimate_distance(cityA='83214', cityB='74532')"
+    },
+    {
+     "call": "estimate_drive_feasibility_by_mileage(distance=750.0)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=39.5)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "find_nearest_tire_shop()"
+    },
+    {
+     "call": "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "cityA": [
+     "'83214'"
+    ],
+    "cityB": [
+     "'74532'"
+    ],
+    "distance": [
+     "750.0"
+    ],
+    "fuelAmount": [
+     "39.5"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "destination": [
+     "'456 Oakwood Avenue, Rivermist, 83214'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_93",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 10.5,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 35.0,
+     "frontRightTirePressure": 35.0,
+     "rearLeftTirePressure": 32.0,
+     "rearRightTirePressure": 32.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "How much fuel I have right now?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "The fuel level is not satisfactory, add it to full and then proceed to activate the engine using the 'START' function and verify the tire pressure to ensure it is in optimal condition."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Should I notice that my tire pressure falls below 40 psi, kindly provide me with directions to the nearest tire service center for prompt resolution."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "displayCarStatus(option='fuel')",
+    "fillFuelTank(fuelAmount=39.5)",
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "check_tire_pressure()",
+    "find_nearest_tire_shop()",
+    "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+   ],
+   "gold_turns": [
+    [
+     "displayCarStatus(option='fuel')"
+    ],
+    [
+     "fillFuelTank(fuelAmount=39.5)",
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')",
+     "check_tire_pressure()"
+    ],
+    [
+     "find_nearest_tire_shop()",
+     "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "displayCarStatus(option='fuel')"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=39.5)"
+    },
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "find_nearest_tire_shop()"
+    },
+    {
+     "call": "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "option": [
+     "'fuel'"
+    ],
+    "fuelAmount": [
+     "39.5"
+    ],
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "destination": [
+     "'456 Oakwood Avenue, Rivermist, 83214'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_94",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "remainingUnlockedDoors": 0,
+     "fuelLevel": 10.0,
+     "batteryVoltage": 12.6,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "locked",
+      "passenger": "locked",
+      "rear_left": "locked",
+      "rear_right": "locked"
+     },
+     "acTemperature": 25.0,
+     "fanSpeed": 50,
+     "acMode": "auto",
+     "humidityLevel": 50.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "engaged",
+     "parkingBrakeForce": 15.3,
+     "slopeAngle": 10.0,
+     "distanceToNextVehicle": 50.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 35.0,
+     "frontRightTirePressure": 35.0,
+     "rearLeftTirePressure": 35.0,
+     "rearRightTirePressure": 35.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Hello! I'm laying out a detailed plan for an extended road trip and need to verify if my car can endure a stretch of over 300 miles without requiring a pit stop for gas. Check the stats for me, would you? Should the range fall short, go ahead and top off the fuel tank with 30 gallons to ensure we're in the clear."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Additionally, before hitting the road, do me a favor and verify the tire pressures. Should any tire fall below the 40 PSI mark, kindly pinpoint the nearest tire shop for me and set navigation."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Finally, I've double-checked that all vehicle portals are locked and secure, and the parking brake's in place. Can you proceed to ignite the engine?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "estimate_drive_feasibility_by_mileage(distance=300.0)",
+    "fillFuelTank(fuelAmount=30.0)",
+    "check_tire_pressure()",
+    "find_nearest_tire_shop()",
+    "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')"
+   ],
+   "gold_turns": [
+    [
+     "estimate_drive_feasibility_by_mileage(distance=300.0)",
+     "fillFuelTank(fuelAmount=30.0)"
+    ],
+    [
+     "check_tire_pressure()",
+     "find_nearest_tire_shop()",
+     "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    ],
+    [
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "estimate_drive_feasibility_by_mileage(distance=300.0)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=30.0)"
+    },
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "find_nearest_tire_shop()"
+    },
+    {
+     "call": "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "distance": [
+     "300.0"
+    ],
+    "fuelAmount": [
+     "30.0"
+    ],
+    "destination": [
+     "'456 Oakwood Avenue, Rivermist, 83214'"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_96",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "fuelLevel": 15.0,
+     "batteryVoltage": 13.2,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "unlocked",
+      "passenger": "unlocked",
+      "rear_left": "unlocked",
+      "rear_right": "unlocked"
+     },
+     "acTemperature": 22.0,
+     "fanSpeed": 70,
+     "acMode": "auto",
+     "humidityLevel": 45.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 100.0,
+     "cruiseStatus": "inactive",
+     "destination": "None",
+     "frontLeftTirePressure": 33.0,
+     "frontRightTirePressure": 33.0,
+     "rearLeftTirePressure": 31.0,
+     "rearRightTirePressure": 31.0
+    },
+    "TravelAPI": {
+     "current_location": "San Francisco",
+     "destination": "Los Angeles",
+     "travel_mode": "driving",
+     "traffic_conditions": "moderate",
+     "estimated_distance": 380.0,
+     "estimated_time": 6.5
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Just acquired a stunning electric vehicle, and it's like a canvas waiting to be explored. Let's lock all those doors, and then let's bring the engine to life to navigate through this journey of mine. How does this whole process work in detail? Please ensure all is set for our voyage ahead."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'm curating a road trip from the vibrant hues of San Francisco to the golden light of Rivermist. Could you craft an estimate of the travel distance and time? I'm keen to envision the extent of this journey."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "get_zipcode_based_on_city(city='San Francisco')",
+    "get_zipcode_based_on_city(city='Rivermist')",
+    "estimate_distance(cityA='94016', cityB='83214')"
+   ],
+   "gold_turns": [
+    [
+     "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])",
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')"
+    ],
+    [
+     "get_zipcode_based_on_city(city='San Francisco')",
+     "get_zipcode_based_on_city(city='Rivermist')",
+     "estimate_distance(cityA='94016', cityB='83214')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "lockDoors(unlock=False, door=['driver', 'passenger', 'rear_left', 'rear_right'])"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "get_zipcode_based_on_city(city='San Francisco')"
+    },
+    {
+     "call": "get_zipcode_based_on_city(city='Rivermist')"
+    },
+    {
+     "call": "estimate_distance(cityA='94016', cityB='83214')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "unlock": [
+     "False"
+    ],
+    "door": [
+     "['driver', 'passenger', 'rear_left', 'rear_right']"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "city": [
+     "'Rivermist'",
+     "'San Francisco'"
+    ],
+    "cityA": [
+     "'94016'"
+    ],
+    "cityB": [
+     "'83214'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_99",
+   "cls": "VehicleControlAPI",
+   "initial_config": {
+    "VehicleControlAPI": {
+     "remainingUnlockedDoors": 0,
+     "fuelLevel": 15.0,
+     "batteryVoltage": 12.8,
+     "engineState": "stopped",
+     "doorStatus": {
+      "driver": "locked",
+      "passenger": "locked",
+      "rear_left": "locked",
+      "rear_right": "locked"
+     },
+     "acTemperature": 22.0,
+     "fanSpeed": 60,
+     "acMode": "auto",
+     "humidityLevel": 45.0,
+     "headLightStatus": "off",
+     "parkingBrakeStatus": "released",
+     "parkingBrakeForce": 0.0,
+     "slopeAngle": 0.0,
+     "distanceToNextVehicle": 100.0,
+     "cruiseStatus": "inactive",
+     "destination": "Grand Canyon",
+     "frontLeftTirePressure": 35.0,
+     "frontRightTirePressure": 35.0,
+     "rearLeftTirePressure": 35.0,
+     "rearRightTirePressure": 35.0
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I'm planning a road trip to the Grand Canyon and need to drive a distance of 380 miles. You could assist me in determining whether my vehicle has sufficient fuel for this journey, please? If it is not sufficient, fill the fuel tank completely."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Now that I trust the fuel level is sufficient, let's engage the vehicle's 'START' ignition mode so that the engine kicks into action. Hoping the battery retains full charge and every door is securely locked. Could we verify the current engine status, AC temperature, and fan speed?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Before embarking on this adventure, double-check that all the tires have been properly inflated."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "If you notice any of them with a pressure below 37, then the tire might have potential issue, and we should take a quick detour to the nearest tire facility. Your help is much appreciated!"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "estimate_drive_feasibility_by_mileage(distance=380.0)",
+    "fillFuelTank(fuelAmount=35.0)",
+    "pressBrakePedal(pedalPosition=1.0)",
+    "startEngine(ignitionMode='START')",
+    "displayCarStatus(option='climate')",
+    "check_tire_pressure()",
+    "find_nearest_tire_shop()",
+    "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+   ],
+   "gold_turns": [
+    [
+     "estimate_drive_feasibility_by_mileage(distance=380.0)",
+     "fillFuelTank(fuelAmount=35.0)"
+    ],
+    [
+     "pressBrakePedal(pedalPosition=1.0)",
+     "startEngine(ignitionMode='START')",
+     "displayCarStatus(option='climate')"
+    ],
+    [
+     "check_tire_pressure()"
+    ],
+    [
+     "find_nearest_tire_shop()",
+     "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "estimate_drive_feasibility_by_mileage(distance=380.0)"
+    },
+    {
+     "call": "fillFuelTank(fuelAmount=35.0)"
+    },
+    {
+     "bundle": "PRESSBRAKEPEDAL_THEN_STARTENGINE",
+     "calls": [
+      "pressBrakePedal(pedalPosition=1.0)",
+      "startEngine(ignitionMode='START')"
+     ]
+    },
+    {
+     "call": "displayCarStatus(option='climate')"
+    },
+    {
+     "call": "check_tire_pressure()"
+    },
+    {
+     "call": "find_nearest_tire_shop()"
+    },
+    {
+     "call": "set_navigation(destination='456 Oakwood Avenue, Rivermist, 83214')"
+    }
+   ],
+   "substitutive": true,
+   "removable": [
+    "PRESSBRAKEPEDAL_THEN_STARTENGINE"
+   ],
+   "universe": {
+    "distance": [
+     "380.0"
+    ],
+    "fuelAmount": [
+     "35.0"
+    ],
+    "pedalPosition": [
+     "1.0"
+    ],
+    "ignitionMode": [
+     "'START'"
+    ],
+    "option": [
+     "'climate'"
+    ],
+    "destination": [
+     "'456 Oakwood Avenue, Rivermist, 83214'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_100",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 10000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Closed",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I'm contemplating enhancing my investment portfolio with some tech industry assets, and I've got my eye on Nvidia. I'm keen to know its current stock price, and would appreciate if you could source this information for me."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Additionally, as I'm strategizing to expand my investments further, I need some help replenishing my trading account. Let's login and fund my account with 10 share of Nvidia worth of money to it to ensure there's ample capital for any trading opportunities that might arise. My usermame is 'Ramkumar' and password is 'hello123'"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_stock_info(symbol='NVDA')",
+    "fund_account(amount=2203.4)"
+   ],
+   "gold_turns": [
+    [
+     "get_stock_info(symbol='NVDA')"
+    ],
+    [
+     "fund_account(amount=2203.4)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_stock_info(symbol='NVDA')"
+    },
+    {
+     "call": "fund_account(amount=2203.4)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'NVDA'"
+    ],
+    "amount": [
+     "2203.4"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_104",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 10000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Closed",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I'm interested in keeping up with Lulu Qian and her impressive achievements in the tech world, even if it's all a bit over my head! One company I've heard about lately that caught my attention because of its innovative tech solutions is 'Quasar Ltd.'. I've become quite intrigued by what they offer. Could you help me out by finding the current price and trading details for 'Quasar Ltd.'. so I can better understand their market position?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Now that you've kindly gathered those details for me, I believe it might be wise to keep a closer eye on Quasar Ltd. with all these promising developments. I think it's time to add this company to my stock watchlist, so I can stay updated on any shifts or movements in its market performance. If it is already on my watch list, list all the item in watchlists."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_stock_info(symbol='QUAS')",
+    "get_watchlist()",
+    "add_to_watchlist(stock='QUAS')"
+   ],
+   "gold_turns": [
+    [
+     "get_stock_info(symbol='QUAS')"
+    ],
+    [
+     "get_watchlist()",
+     "add_to_watchlist(stock='QUAS')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_stock_info(symbol='QUAS')"
+    },
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "add_to_watchlist(stock='QUAS')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'QUAS'"
+    ],
+    "stock": [
+     "'QUAS'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_105",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 10000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": false,
+     "market_status": "Closed",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Can you provide the latest trading details for Quasar Ltd.?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Furthermore, I'd like to delve into the technology sector. Would you be able to compile a comprehensive list of stock symbols pertinent to this industry and add all of them to my watchlist"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_stock_info(symbol='QUAS')",
+    "get_available_stocks('Technology')",
+    "add_to_watchlist(stock='AAPL')",
+    "add_to_watchlist(stock='GOOG')",
+    "add_to_watchlist(stock='MSFT')"
+   ],
+   "gold_turns": [
+    [
+     "get_stock_info(symbol='QUAS')"
+    ],
+    [
+     "get_available_stocks('Technology')",
+     "add_to_watchlist(stock='AAPL')",
+     "add_to_watchlist(stock='GOOG')",
+     "add_to_watchlist(stock='MSFT')"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_stock_info(symbol='QUAS')"
+    },
+    {
+     "call": "get_available_stocks('Technology')"
+    },
+    {
+     "call": "add_to_watchlist(stock='AAPL')"
+    },
+    {
+     "call": "add_to_watchlist(stock='GOOG')"
+    },
+    {
+     "call": "add_to_watchlist(stock='MSFT')"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'QUAS'"
+    ],
+    "_0": [
+     "'Technology'"
+    ],
+    "stock": [
+     "'AAPL'",
+     "'GOOG'",
+     "'MSFT'"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_107",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 11500.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      },
+      "ZETA": {
+       "price": 150.75,
+       "percent_change": 0.05,
+       "volume": 1.5,
+       "MA(5)": 150.5,
+       "MA(20)": 150.3
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Before purchasing shares in Zeta Corp, I am curious about their recent stock performance. Could you provide their stock symbol and detail their market activity?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I've reviewed Zeta Corp's market data and am keen to proceed with an acquisition. Could you initiate a purchase of 50 shares at the prevailing market rate for me?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'm eager to confirm the particulars of my Zeta Corp order. Would you be able to supply the full details, including the order ID?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Upon further contemplation, I need to reassess my approach. Kindly proceed with canceling that order on my behalf."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Furthermore, could you deliver an update on my account, including the current balance and the linked card number, to ensure everything is accurately aligned?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_stock_info(symbol='ZETA')",
+    "place_order(order_type='Buy',symbol='ZETA',price=150.75,amount=50)",
+    "get_order_details(order_id=12446)",
+    "cancel_order(order_id=12446)",
+    "get_account_info()"
+   ],
+   "gold_turns": [
+    [
+     "get_stock_info(symbol='ZETA')"
+    ],
+    [
+     "place_order(order_type='Buy',symbol='ZETA',price=150.75,amount=50)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "cancel_order(order_id=12446)"
+    ],
+    [
+     "get_account_info()"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_stock_info(symbol='ZETA')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='ZETA',price=150.75,amount=50)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "cancel_order(order_id=12446)"
+    },
+    {
+     "call": "get_account_info()"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'ZETA'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "150.75"
+    ],
+    "amount": [
+     "50"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_115",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "account_info": {
+      "account_id": 98765,
+      "balance": 15000.0,
+      "binding_card": 1987654321098765
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      },
+      "AMZN": {
+       "price": 3300.0,
+       "percent_change": 0.25,
+       "volume": 3.456,
+       "MA(5)": 3295.0,
+       "MA(20)": 3280.0
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": [
+      {
+       "order_id": 12345,
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed",
+       "timestamp": "2024-10-27 14:10:53"
+      }
+     ]
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I require a comprehensive analysis of the stock with Amazon, as it will inform my subsequent decision-making."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Based on the insights gathered, if 'AMZN' appears promising, coordinate its addition to my watchlist. By promising I mean the price is larger than 300."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Access and retrieve the details of my most recent order, as I've misplaced the ID but need the latest transaction."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_stock_info(symbol='AMZN')",
+    "add_to_watchlist(stock='AMZN')",
+    "get_order_details(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "get_stock_info(symbol='AMZN')"
+    ],
+    [
+     "add_to_watchlist(stock='AMZN')"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_stock_info(symbol='AMZN')"
+    },
+    {
+     "call": "add_to_watchlist(stock='AMZN')"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'AMZN'"
+    ],
+    "stock": [
+     "'AMZN'"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_116",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 67890,
+      "balance": 15000.0,
+      "binding_card": 9876543210123456
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "OMEG",
+      "ZETA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Could you peruse my stock watchlist and share what's on my radar right now, please?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'm inclined to shake things up a bit. Let's take Zeta Corp out of the equation from my watchlist, shall we?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I have a keen interest in Omega Industries at the moment. Let's delve into the latest stock details to see what they hold."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Word is, the Technology sector is buzzing. Catalogue the stocks in this field for me, as I'm scouting for new investment potential."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I feel it's time to inject some capital into my portfolio\u2014let's allocate an extra $10,000 to my trading funds."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "With the account bolstered, execute a purchase for 'AAPL'-a fair target seems $150 per share, and I'm thinking 50 shares will do the trick."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_watchlist()",
+    "remove_stock_from_watchlist(symbol='ZETA')",
+    "get_stock_info(symbol='OMEG')",
+    "get_available_stocks(sector='Technology')",
+    "fund_account(amount=10000)",
+    "place_order(order_type='Buy', symbol='AAPL', price=150.0, amount=50)"
+   ],
+   "gold_turns": [
+    [
+     "get_watchlist()"
+    ],
+    [
+     "remove_stock_from_watchlist(symbol='ZETA')"
+    ],
+    [
+     "get_stock_info(symbol='OMEG')"
+    ],
+    [
+     "get_available_stocks(sector='Technology')"
+    ],
+    [
+     "fund_account(amount=10000)"
+    ],
+    [
+     "place_order(order_type='Buy', symbol='AAPL', price=150.0, amount=50)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "remove_stock_from_watchlist(symbol='ZETA')"
+    },
+    {
+     "call": "get_stock_info(symbol='OMEG')"
+    },
+    {
+     "call": "get_available_stocks(sector='Technology')"
+    },
+    {
+     "call": "fund_account(amount=10000)"
+    },
+    {
+     "call": "place_order(order_type='Buy', symbol='AAPL', price=150.0, amount=50)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'AAPL'",
+     "'OMEG'",
+     "'ZETA'"
+    ],
+    "sector": [
+     "'Technology'"
+    ],
+    "amount": [
+     "10000",
+     "50"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "150.0"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_117",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 98765,
+      "balance": 16000.0,
+      "binding_card": 1987654321098765
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "ZETA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I'd like some assistance today with my investment portfolio. If Zeta Corp is part of my watchlist, please remove it for me. The market trends for their extractions are concerning me recently."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "With my watchlist refreshed, please retrieve the current stocks still listed. I need a clear view of what remains on my radar."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'm intrigued by the recent advancements in technology and wish to explore investment opportunities there. Could you provide a list of available technology stock symbols?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I've been observing Microsoft's stock performance and I find it quite compelling. Could you give me a detailed update on its current status and trends?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'm ready to act on my analysis. Please purchase 50 shares of Microsoft at $320 each, given today's indicators."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Finally, before the end of the trading day, I intend to deposit 10 times the prices of OMEG rounded to nearest thousands into my trading account to secure liquidity for forthcoming ventures."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "remove_stock_from_watchlist(symbol='ZETA')",
+    "get_watchlist()",
+    "get_available_stocks(sector='Technology')",
+    "get_stock_info(symbol='MSFT')",
+    "place_order(order_type='Buy',symbol='MSFT',price=320,amount=50)",
+    "fund_account(amount=5000)"
+   ],
+   "gold_turns": [
+    [
+     "remove_stock_from_watchlist(symbol='ZETA')"
+    ],
+    [
+     "get_watchlist()"
+    ],
+    [
+     "get_available_stocks(sector='Technology')"
+    ],
+    [
+     "get_stock_info(symbol='MSFT')"
+    ],
+    [
+     "place_order(order_type='Buy',symbol='MSFT',price=320,amount=50)"
+    ],
+    [
+     "fund_account(amount=5000)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "remove_stock_from_watchlist(symbol='ZETA')"
+    },
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "get_available_stocks(sector='Technology')"
+    },
+    {
+     "call": "get_stock_info(symbol='MSFT')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='MSFT',price=320,amount=50)"
+    },
+    {
+     "call": "fund_account(amount=5000)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'MSFT'",
+     "'ZETA'"
+    ],
+    "sector": [
+     "'Technology'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "320"
+    ],
+    "amount": [
+     "50",
+     "5000"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_118",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 98765,
+      "balance": 30000.0,
+      "binding_card": 1987654321098765
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "TSLA",
+      "GOOG"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Hey, I was wondering if you could look at my stock watchlist for me? I want to make sure I'm on top of my investments."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": " Would you mind taking the first one off my watchlist?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'm thinking about buying some shares today. Could you help me out by ordering 100 shares of AAPL at the current market price? I don't need the specifics\u2014I'm relying on your expertise!"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I might have bought more shares than I meant to before. Could you tell me the details of my latest order? Just want to be certain everything's correct before I make my next move."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Actually, I think I should cancel that last order. I need to rethink my strategy with all the current market changes happening."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_watchlist()",
+    "remove_stock_from_watchlist(symbol='NVDA')",
+    "get_stock_info(symbol='AAPL')",
+    "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=100)",
+    "get_order_details(order_id=12446)",
+    "cancel_order(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "get_watchlist()"
+    ],
+    [
+     "remove_stock_from_watchlist(symbol='NVDA')"
+    ],
+    [
+     "get_stock_info(symbol='AAPL')",
+     "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=100)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "cancel_order(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "remove_stock_from_watchlist(symbol='NVDA')"
+    },
+    {
+     "call": "get_stock_info(symbol='AAPL')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=100)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "cancel_order(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'AAPL'",
+     "'NVDA'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "227.16"
+    ],
+    "amount": [
+     "100"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_120",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 22800.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "After confirming the market's operational status, proceed to purchase 100 Apple shares at the prevailing market price."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Review the AAPL order details to ensure it's error-free and accurately executed."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Cancel the previously placed order immediately and manage the procedure for me."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_stock_info(symbol='AAPL')",
+    "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=100)",
+    "get_order_details(order_id=12446)",
+    "cancel_order(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "get_stock_info(symbol='AAPL')",
+     "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=100)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "cancel_order(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_stock_info(symbol='AAPL')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=100)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "cancel_order(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'AAPL'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "227.16"
+    ],
+    "amount": [
+     "100"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_121",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 35000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "In the realm of investment opportunities, I'm intrigued by the Technology sector at the moment. Would you be able to provide a variety of stock symbols within this sector for my consideration?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Proceed with the purchase of 150 shares of the initial stock symbol from that list at the prevailing market price."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'd like to verify the status and execution of the order we've just initiated to confirm it's proceeding as intended."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Furthermore, withdraw $500 from my account to maintain sufficient liquidity in anticipation of possible market fluctuations."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_available_stocks(sector='Technology')",
+    "get_stock_info(symbol='AAPL')",
+    "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=150)",
+    "get_order_details(order_id=12446)",
+    "get_account_info()",
+    "withdraw_funds(amount=500)"
+   ],
+   "gold_turns": [
+    [
+     "get_available_stocks(sector='Technology')"
+    ],
+    [
+     "get_stock_info(symbol='AAPL')",
+     "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=150)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "get_account_info()",
+     "withdraw_funds(amount=500)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_available_stocks(sector='Technology')"
+    },
+    {
+     "call": "get_stock_info(symbol='AAPL')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=150)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "get_account_info()"
+    },
+    {
+     "call": "withdraw_funds(amount=500)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "sector": [
+     "'Technology'"
+    ],
+    "symbol": [
+     "'AAPL'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "227.16"
+    ],
+    "amount": [
+     "150",
+     "500"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_122",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 16000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I noticed some promising trends and want to proceed with a 'Buy' order for 100 shares of AAPL at a price of $150 each. Let's ensure the order is placed correctly."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I received a notification about the order placement but want a detailed look at the transaction. Provide me with the full details of my recent order."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Upon further consideration, I think it's better to hold off on this purchase. Please cancel my recent order for the AAPL shares."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I've handled all necessary trading decisions for today, and I want to make sure my account is securely logged out. Confirm my logout from the trading system."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "place_order(order_type='Buy',symbol='AAPL',price=150,amount=100)",
+    "get_order_details(order_id=12446)",
+    "cancel_order(order_id=12446)",
+    "trading_logout()"
+   ],
+   "gold_turns": [
+    [
+     "place_order(order_type='Buy',symbol='AAPL',price=150,amount=100)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "cancel_order(order_id=12446)"
+    ],
+    [
+     "trading_logout()"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "place_order(order_type='Buy',symbol='AAPL',price=150,amount=100)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "cancel_order(order_id=12446)"
+    },
+    {
+     "call": "trading_logout()"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "order_type": [
+     "'Buy'"
+    ],
+    "symbol": [
+     "'AAPL'"
+    ],
+    "price": [
+     "150"
+    ],
+    "amount": [
+     "100"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_123",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 98765,
+      "balance": 105000.0,
+      "binding_card": 1987654321098765
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I'm reviewing my account, and I'd like you to confirm the current balance and provide the account details. Subsequently, initiate a purchase order for 150 shares of TSLA at the prevailing market price leveraging my account balance."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Please display the details for the TSLA buy order that you have just executed."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Kindly revoke the order we talked about earlier."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "For the moment, log me out of the trading platform."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_account_info()",
+    "get_stock_info(symbol='TSLA')",
+    "place_order(order_type='Buy',symbol='TSLA',price=667.92,amount=150)",
+    "get_order_details(order_id=12446)",
+    "cancel_order(order_id=12446)",
+    "trading_logout()"
+   ],
+   "gold_turns": [
+    [
+     "get_account_info()",
+     "get_stock_info(symbol='TSLA')",
+     "place_order(order_type='Buy',symbol='TSLA',price=667.92,amount=150)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "cancel_order(order_id=12446)"
+    ],
+    [
+     "trading_logout()"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_account_info()"
+    },
+    {
+     "call": "get_stock_info(symbol='TSLA')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='TSLA',price=667.92,amount=150)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "cancel_order(order_id=12446)"
+    },
+    {
+     "call": "trading_logout()"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'TSLA'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "667.92"
+    ],
+    "amount": [
+     "150"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_126",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 98765,
+      "balance": 15000.0,
+      "binding_card": 1987654321098765
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "XYZ": {
+       "price": 150.0,
+       "percent_change": 0.1,
+       "volume": 1.5,
+       "MA(5)": 149.5,
+       "MA(20)": 150.2
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "XYZ"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Oh man, I've just logged into my trading account and I'm super keen to take a look at the stocks I'm keeping an eye on. Could I get you to pull up the latest stock symbols from my watchlist?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "So, I was scrolling through the stocks I'm following and spotted this symbol XYZ. I'd really like to snag 100 shares right now at the current market price. Mind placing that order for me?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "By the way, can I get the lowdown on that order I just put in? I want to double-check how it's cooking\u2014need to see the status and any terms clinging to it."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I've been thinking and I might need to pull the plug on that last order I made. Can you nix it for me, please? I'm having second thoughts!"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_watchlist()",
+    "get_stock_info(symbol='XYZ')",
+    "place_order(order_type='Buy',symbol='XYZ',price=150.0,amount=100)",
+    "get_order_details(order_id=12446)",
+    "cancel_order(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "get_watchlist()"
+    ],
+    [
+     "get_stock_info(symbol='XYZ')",
+     "place_order(order_type='Buy',symbol='XYZ',price=150.0,amount=100)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "cancel_order(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "get_stock_info(symbol='XYZ')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='XYZ',price=150.0,amount=100)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "cancel_order(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'XYZ'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "150.0"
+    ],
+    "amount": [
+     "100"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_127",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 40000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      },
+      "BDX": {
+       "price": 250.0,
+       "percent_change": 0.05,
+       "volume": 1.5,
+       "MA(5)": 249.5,
+       "MA(20)": 248.75
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "BDX"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I\u2019m re-evaluating my current investment portfolio and need to make informed decisions. Could you display the current stocks I am monitoring?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Some stocks are underperforming and I wish to streamline my choices. Could we eliminate BDX from my observed list?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I have decided to take decisive action. Let's acquire 150 shares of BDX at the existing market value."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Upon completion, please furnish a detailed summary regarding the most recent order details on my account."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_watchlist()",
+    "remove_stock_from_watchlist(symbol='BDX')",
+    "get_stock_info(symbol='BDX')",
+    "place_order(order_type='Buy',symbol='BDX',price=250.0,amount=150)",
+    "get_order_details(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "get_watchlist()"
+    ],
+    [
+     "remove_stock_from_watchlist(symbol='BDX')"
+    ],
+    [
+     "get_stock_info(symbol='BDX')",
+     "place_order(order_type='Buy',symbol='BDX',price=250.0,amount=150)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "remove_stock_from_watchlist(symbol='BDX')"
+    },
+    {
+     "call": "get_stock_info(symbol='BDX')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='BDX',price=250.0,amount=150)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'BDX'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "250.0"
+    ],
+    "amount": [
+     "150"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_128",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 98765,
+      "balance": 55000.0,
+      "binding_card": 1987654321098765
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "MSFT"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Could you ascertain the current time? It seems vital for aligning my stock market ventures seamlessly. Additionally, could you do me the favor of identifying which stocks in the Technology sector are currently offered?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Upon reviewing the available stocks in Technology, please arrange the acquisition of 150 Microsoft shares at the going market rate. I'd appreciate it if you could oversee this and notify me of its status immediately post-execution."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "My curiosity peaks regarding the specifics of my placed order. Would you be able to retrieve these details, ensuring the transaction progresses smoothly as envisioned?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Alas, with the shift in market dynamics, a quick rescindment of our discussed order is warranted. Could you promptly initiate the cancellation and affirm its completion?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_current_time()",
+    "get_available_stocks(sector='Technology')",
+    "get_stock_info(symbol='MSFT')",
+    "place_order(order_type='Buy',symbol='MSFT',price=310.23,amount=150)",
+    "get_order_details(order_id=12446)",
+    "cancel_order(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "get_current_time()",
+     "get_available_stocks(sector='Technology')"
+    ],
+    [
+     "get_stock_info(symbol='MSFT')",
+     "place_order(order_type='Buy',symbol='MSFT',price=310.23,amount=150)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "cancel_order(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_current_time()"
+    },
+    {
+     "call": "get_available_stocks(sector='Technology')"
+    },
+    {
+     "call": "get_stock_info(symbol='MSFT')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='MSFT',price=310.23,amount=150)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "cancel_order(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "sector": [
+     "'Technology'"
+    ],
+    "symbol": [
+     "'MSFT'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "310.23"
+    ],
+    "amount": [
+     "150"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_130",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 98765,
+      "balance": 15000.0,
+      "binding_card": 9876543210123456
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Having established the market scenario, imagine you're poised to place an order to acquire 150 shares of 'NEPT' at 25.50 USD per share. Would you initiate this order for me?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Once you've positioned this order, curiosity strikes about its intricate details. Would you mind fetching those details for me now?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "After a detailed inspection of the order, a change of heart leads you to rescind the transaction. Would you revoke the placed order?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Post cancellation, you're driven to survey your financial standing. Would you compile and relay a summary of your current account particulars?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Armed with the account overview, you've resolved to infuse 5000 USD into your trading account for potential ventures ahead. Could you arrange for this deposit to be processed efficiently?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "place_order(order_type='Buy',symbol='NEPT',price=25.5,amount=150)",
+    "get_order_details(order_id=12446)",
+    "cancel_order(order_id=12446)",
+    "get_account_info()",
+    "fund_account(amount=5000.0)"
+   ],
+   "gold_turns": [
+    [
+     "place_order(order_type='Buy',symbol='NEPT',price=25.5,amount=150)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ],
+    [
+     "cancel_order(order_id=12446)"
+    ],
+    [
+     "get_account_info()"
+    ],
+    [
+     "fund_account(amount=5000.0)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "place_order(order_type='Buy',symbol='NEPT',price=25.5,amount=150)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    },
+    {
+     "call": "cancel_order(order_id=12446)"
+    },
+    {
+     "call": "get_account_info()"
+    },
+    {
+     "call": "fund_account(amount=5000.0)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "order_type": [
+     "'Buy'"
+    ],
+    "symbol": [
+     "'NEPT'"
+    ],
+    "price": [
+     "25.5"
+    ],
+    "amount": [
+     "150",
+     "5000.0"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_132",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "account_info": {
+      "account_id": 12345,
+      "balance": 10000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "I need details on the performance of a particular stock, 'SYNX', can you provide me with the critical information? It should be added to my watchlist."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Review the order that I had placed, looking at its details, and let me know if it should be cancelled."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_stock_info(symbol='SYNX')",
+    "add_to_watchlist(stock='SYNX')",
+    "get_order_details(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "get_stock_info(symbol='SYNX')",
+     "add_to_watchlist(stock='SYNX')"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_stock_info(symbol='SYNX')"
+    },
+    {
+     "call": "add_to_watchlist(stock='SYNX')"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'SYNX'"
+    ],
+    "stock": [
+     "'SYNX'"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_135",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 17000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      },
+      "ZETA": {
+       "price": 120.0,
+       "percent_change": 0.05,
+       "volume": 1.0,
+       "MA(5)": 119.5,
+       "MA(20)": 118.75
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "ZETA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Integrate Zeta Corp\u2019s stock into my watchlist and subsequently display the current contents of that watchlist."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Bring up information on 'NVDA', check the Technology sector for reference."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "After comparison, I observed some promising fluctuations earlier and wish to place a purchase order for Zeta Corp shares at $120 each for 100 units."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "After completing the transaction, share the specifics of this newly placed order with me."
+     }
+    ]
+   ],
+   "gold_l0": [
+    "add_to_watchlist(stock='ZETA')",
+    "get_watchlist()",
+    "get_available_stocks(sector='Technology')",
+    "get_stock_info(symbol='NVDA')",
+    "place_order(order_type='Buy',symbol='ZETA',price=120,amount=100)",
+    "get_order_details(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "add_to_watchlist(stock='ZETA')",
+     "get_watchlist()"
+    ],
+    [
+     "get_available_stocks(sector='Technology')",
+     "get_stock_info(symbol='NVDA')"
+    ],
+    [
+     "place_order(order_type='Buy',symbol='ZETA',price=120,amount=100)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "add_to_watchlist(stock='ZETA')"
+    },
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "get_available_stocks(sector='Technology')"
+    },
+    {
+     "call": "get_stock_info(symbol='NVDA')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='ZETA',price=120,amount=100)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "stock": [
+     "'ZETA'"
+    ],
+    "sector": [
+     "'Technology'"
+    ],
+    "symbol": [
+     "'NVDA'",
+     "'ZETA'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "120"
+    ],
+    "amount": [
+     "100"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_142",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 10000.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      },
+      "ZETA": {
+       "price": 150.0,
+       "percent_change": 0.05,
+       "volume": 1.5,
+       "MA(5)": 149.5,
+       "MA(20)": 150.2
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "ZETA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Let's get Zeta Corp on my watchlist, alright? I'd like to keep an eye on them."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I'm curious, what stocks have I been keeping tabs on lately?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Let's dive into some fresh details for one of the stocks I'm watching. Just go ahead and grab 'ZETA'."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Feeling ready to invest! Let's put in a buy order for 50 shares at the current market price for that stock."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I need to make sure I've got enough cash for that order. Could you please top up my trading account with $5,000?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "add_to_watchlist(stock='ZETA')",
+    "get_watchlist()",
+    "get_stock_info(symbol='ZETA')",
+    "place_order(order_type='Buy',symbol='ZETA',price=150.0,amount=50)",
+    "fund_account(amount=5000)"
+   ],
+   "gold_turns": [
+    [
+     "add_to_watchlist(stock='ZETA')"
+    ],
+    [
+     "get_watchlist()"
+    ],
+    [
+     "get_stock_info(symbol='ZETA')"
+    ],
+    [
+     "place_order(order_type='Buy',symbol='ZETA',price=150.0,amount=50)"
+    ],
+    [
+     "fund_account(amount=5000)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "add_to_watchlist(stock='ZETA')"
+    },
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "get_stock_info(symbol='ZETA')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='ZETA',price=150.0,amount=50)"
+    },
+    {
+     "call": "fund_account(amount=5000)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "stock": [
+     "'ZETA'"
+    ],
+    "symbol": [
+     "'ZETA'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "150.0"
+    ],
+    "amount": [
+     "50",
+     "5000"
+    ]
+   }
+  },
+  {
+   "id": "multi_turn_base_146",
+   "cls": "TradingBot",
+   "initial_config": {
+    "TradingBot": {
+     "orders": {
+      "12345": {
+       "symbol": "AAPL",
+       "price": 210.65,
+       "num_shares": 10,
+       "status": "Completed"
+      },
+      "order_type": "Buy"
+     },
+     "account_info": {
+      "account_id": 12345,
+      "balance": 15500.0,
+      "binding_card": 1974202140965533
+     },
+     "authenticated": true,
+     "market_status": "Open",
+     "order_counter": 12446,
+     "stocks": {
+      "AAPL": {
+       "price": 227.16,
+       "percent_change": 0.17,
+       "volume": 2.552,
+       "MA(5)": 227.11,
+       "MA(20)": 227.09
+      },
+      "GOOG": {
+       "price": 2840.34,
+       "percent_change": 0.24,
+       "volume": 1.123,
+       "MA(5)": 2835.67,
+       "MA(20)": 2842.15
+      },
+      "TSLA": {
+       "price": 667.92,
+       "percent_change": -0.12,
+       "volume": 1.654,
+       "MA(5)": 671.15,
+       "MA(20)": 668.2
+      },
+      "MSFT": {
+       "price": 310.23,
+       "percent_change": 0.09,
+       "volume": 3.234,
+       "MA(5)": 309.88,
+       "MA(20)": 310.11
+      },
+      "NVDA": {
+       "price": 220.34,
+       "percent_change": 0.34,
+       "volume": 1.234,
+       "MA(5)": 220.45,
+       "MA(20)": 220.67
+      },
+      "ALPH": {
+       "price": 1320.45,
+       "percent_change": -0.08,
+       "volume": 1.567,
+       "MA(5)": 1321.12,
+       "MA(20)": 1325.78
+      },
+      "OMEG": {
+       "price": 457.23,
+       "percent_change": 0.12,
+       "volume": 2.345,
+       "MA(5)": 456.78,
+       "MA(20)": 458.12
+      },
+      "QUAS": {
+       "price": 725.89,
+       "percent_change": -0.03,
+       "volume": 1.789,
+       "MA(5)": 726.45,
+       "MA(20)": 728.0
+      },
+      "NEPT": {
+       "price": 88.34,
+       "percent_change": 0.19,
+       "volume": 0.654,
+       "MA(5)": 88.21,
+       "MA(20)": 88.67
+      },
+      "SYNX": {
+       "price": 345.67,
+       "percent_change": 0.11,
+       "volume": 2.112,
+       "MA(5)": 345.34,
+       "MA(20)": 346.12
+      }
+     },
+     "watch_list": [
+      "NVDA",
+      "AAPL",
+      "GOOG",
+      "ZETA"
+     ],
+     "transaction_history": []
+    }
+   },
+   "question": [
+    [
+     {
+      "role": "user",
+      "content": "Hey there! Could you help me by identifying the stocks currently present on my watchlist?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Could you kindly remove 'Zeta Corp' from the list?"
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "I am interested in purchasing 50 shares of 'Apple' at the present market price. Please proceed with the transaction."
+     }
+    ],
+    [
+     {
+      "role": "user",
+      "content": "Would you be able to show me the details of my most recent order when you have a moment?"
+     }
+    ]
+   ],
+   "gold_l0": [
+    "get_watchlist()",
+    "remove_stock_from_watchlist(symbol='ZETA')",
+    "get_stock_info(symbol='AAPL')",
+    "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=50)",
+    "get_order_details(order_id=12446)"
+   ],
+   "gold_turns": [
+    [
+     "get_watchlist()"
+    ],
+    [
+     "remove_stock_from_watchlist(symbol='ZETA')"
+    ],
+    [
+     "get_stock_info(symbol='AAPL')",
+     "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=50)"
+    ],
+    [
+     "get_order_details(order_id=12446)"
+    ]
+   ],
+   "gold_l1": [
+    {
+     "call": "get_watchlist()"
+    },
+    {
+     "call": "remove_stock_from_watchlist(symbol='ZETA')"
+    },
+    {
+     "call": "get_stock_info(symbol='AAPL')"
+    },
+    {
+     "call": "place_order(order_type='Buy',symbol='AAPL',price=227.16,amount=50)"
+    },
+    {
+     "call": "get_order_details(order_id=12446)"
+    }
+   ],
+   "substitutive": false,
+   "removable": [],
+   "universe": {
+    "symbol": [
+     "'AAPL'",
+     "'ZETA'"
+    ],
+    "order_type": [
+     "'Buy'"
+    ],
+    "price": [
+     "227.16"
+    ],
+    "amount": [
+     "50"
+    ],
+    "order_id": [
+     "12446"
+    ]
+   }
+  }
+ ]
+}

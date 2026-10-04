@@ -1,0 +1,4 @@
+torch>=2.2
+transformers>=4.51     # Qwen3 needs >=4.51; SmolLM2 fine; gemma-3 needs >=4.50
+accelerate
+safetensors

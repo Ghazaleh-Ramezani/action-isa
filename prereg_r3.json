@@ -1,0 +1,21 @@
+{
+  "author": "[redacted for anonymous review]",
+  "written_by_author": true,
+  "utc": "2026-08-14T19:39:47Z",
+  "predictions": {
+    "A_S_L1_mean_across_seeds": 0.8,
+    "A_S_L1_min_across_seeds": 0.7,
+    "A_S_L0_max_across_seeds": 0.05,
+    "A_S_L0tight_mean": 0.15,
+    "B_max_S_over_sweep": 0.25,
+    "B_spearman_S_vs_Htot": -0.3,
+    "C_S_precondition_only": 0.12,
+    "C_S_stopping_only": 0.05,
+    "C_S_ordering_only": 0.05,
+    "C_S_all_three": 0.15,
+    "D_S_Lrand_matched": 0.12,
+    "E_S_L1_1p7B": 0.9,
+    "E_S_L0_1p7B": 0.1
+  },
+  "sha256": "3395b1568faf7d162da1a2ad18962419fc9bb40b93cbb60d60ae39200a464eac"
+}

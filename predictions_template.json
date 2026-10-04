@@ -1,0 +1,8 @@
+{
+  "_how": "Fill BEFORE running. One entry per model id. Keys are '<lang>.<field>' with field in S, S_cf, Htot, ordering_cf. extra_analysis.py scores each as HIT if |observed - predicted| <= 0.10, the paper's criterion. Commit this file with a timestamp before the first --go.",
+  "_written": "YYYY-MM-DD HH:MM",
+  "HuggingFaceTB/SmolLM2-360M-Instruct": {"L0.S": 0.0, "L0p.S": 0.15, "L1.S": 0.8, "L1.ordering_cf": 1.0, "L0p.ordering_cf": 0.0},
+  "HuggingFaceTB/SmolLM2-1.7B-Instruct": {"L0.S": 0.2, "L0p.S": 0.4, "L1.S": 0.5},
+  "Qwen/Qwen3-1.7B": {"L1.S": 0.45, "L0p.S": 0.40, "L0.S": 0.20},
+  "Qwen/Qwen3-4B":   {"L1.S": 0.40, "L0p.S": 0.525, "L0.S": 0.275}
+}
